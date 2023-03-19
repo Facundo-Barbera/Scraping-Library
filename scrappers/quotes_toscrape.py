@@ -1,61 +1,62 @@
 import requests
 from bs4 import BeautifulSoup
+import sqlite3
 
 
 class QuotesToScrapeScrapper:
     """
-    Scrapes quotes from http://quotes.toscrape.com/
+    Scrapes quotes from http://quotes.toscrape.com
 
     Saves the quotes in a csv file.
     """
+    BASE_URL = 'http://quotes.toscrape.com'
 
-    def __init__(self, csv_file: str = 'quotes.csv'):
-        self._base_url = 'http://quotes.toscrape.com/'
-        self._csv_file = csv_file
+    def __init__(self, database_file: str = 'data/output.db'):
+        self._database_file = database_file
+        self._create_table()
+
+    def _create_table(self):
+        # Create table if it doesn't exist
+        with sqlite3.connect(self._database_file) as connection:
+            connection.execute('CREATE TABLE IF NOT EXISTS quotes ('
+                               'text TEXT NOT NULL,'
+                               'author TEXT NOT NULL,'
+                               'tags TEXT NOT NULL'
+                               ')')
+
+        # Delete all contents of the table before scraping
+        with sqlite3.connect(self._database_file) as connection:
+            connection.execute('DELETE FROM quotes')
 
     def scrape(self):
         """
-        Scrapes quotes from http://quotes.toscrape.com/
-
-        :return:
-            None
+        Scrapes quotes from http://quotes.toscrape.com
         """
-        url = self._base_url
+        # Set the base url
+        url = self.BASE_URL
 
-        # Delete file if exists
-        with open('quotes.csv', 'w') as file:
-            file.write('text,author,tags \n')
-
-        # Loop through all pages
-        while True:
+        # Scrape quotes from all pages
+        while url:
             print(f'Now scraping {url}...')
             next_page = self._scrape_quotes(url)
-
-            if next_page:
-                url = self._base_url + next_page
-            else:
-                break
+            url = (self.BASE_URL + next_page) if next_page else None
 
     def _scrape_quotes(self, url: str):
-        page = requests.get(url)
-        soup = BeautifulSoup(page.content, 'html.parser')
-        quotes = soup.find_all('div', class_='quote')
+        # Get the page
+        page_html = requests.get(url)
+        parsed_html = BeautifulSoup(page_html.content, 'html.parser')
 
-        for quote in quotes:
-            self._save_quote(quote)
+        # Get all quotes and save them to the database
+        for quote in parsed_html.find_all('div', class_='quote'):
+            self._save_quote_to_database(quote)
 
-        next_button = soup.find('li', class_='next')
-        if next_button:
-            return next_button.find('a')['href']
-        else:
-            return None
+        # Check if there is a next page button
+        next_button = parsed_html.find('li', class_='next') or None
+        return next_button.find('a')['href'] if next_button else None
 
-    def _save_quote(self, quote):
-        quote_dict = {
-            'text': quote.find('span', class_='text').get_text(),
-            'author': quote.find('small', class_='author').get_text(),
-            'tags': str([tag.get_text() for tag in quote.find('div', class_='tags').find_all('a', class_='tag')])
-        }
-
-        with open(self._csv_file, 'a') as file:
-            file.write(f"{quote_dict['text']},{quote_dict['author']},{quote_dict['tags']} \n")
+    def _save_quote_to_database(self, quote):
+        with sqlite3.connect(self._database_file) as connection:
+            connection.execute('INSERT INTO quotes (text, author, tags) VALUES (?, ?, ?)',
+                               (quote.find('span', class_='text').text,
+                                quote.find('small', class_='author').text,
+                                str([tag.text for tag in quote.find_all('a', class_='tag')])))
