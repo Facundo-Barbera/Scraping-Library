@@ -1,0 +1,1 @@
+from .quotes_toscrape import QuotesToScrapeScrapper
