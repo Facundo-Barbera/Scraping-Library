@@ -11,8 +11,8 @@ class QuotesToScrapeScrapper:
     """
     BASE_URL = 'http://quotes.toscrape.com'
 
-    def __init__(self, database_file: str = 'data/output.db'):
-        self._database_file = database_file
+    def __init__(self, database_file: str):
+        self._database_file = database_file if database_file else 'data/quotes.db'
         self._create_table()
 
     def _create_table(self):
