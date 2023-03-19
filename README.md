@@ -26,6 +26,10 @@ python3 scrapper.py <site-to-scrape> (output-file)
   - This needs to be a `.db` file since the data is saved using `sqlite3`
   - The default value is `data/output.db`
 
+
+Note: the database file will be created each time the script is run. 
+If you want to keep the data, move the file to a different location before running the script again.
+
 ### Sites to scrape (`<site-to-scrape>`)
 | Site   | Parameter name | Status  | Link                                                |
 |--------|----------------|---------|-----------------------------------------------------|
