@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import sqlite3
 
+DEFAULT_DATABASE_FILE = 'data/output.db'
+
 
 class QuotesToScrapeScrapper:
     """
@@ -11,8 +13,8 @@ class QuotesToScrapeScrapper:
     """
     BASE_URL = 'http://quotes.toscrape.com'
 
-    def __init__(self, database_file: str):
-        self._database_file = database_file if database_file else 'data/quotes.db'
+    def __init__(self, database_file: str = DEFAULT_DATABASE_FILE):
+        self._database_file = database_file
         self._create_table()
 
     def _create_table(self):

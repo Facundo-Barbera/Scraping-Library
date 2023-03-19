@@ -18,10 +18,13 @@ pip install -r requirements.txt
 python3 scrapper.py <site-to-scrape> (output-file)
 ```
 
-- `<site-to-scrape>` is the site to scrape. (See the list below)
+- `(site-to-scrape)` is the site to scrape, see the list below. 
+  - This argument is not required
+  - If it is not specified, the script will ask for it, and default database will be used.
+
 - `(output-file)` this is an optional argument, that specifies the output file.
-This needs to be a `.db` file since the data is saved using `sqlite3`
-The default value is `output.db`
+  - This needs to be a `.db` file since the data is saved using `sqlite3`
+  - The default value is `data/output.db`
 
 ### Sites to scrape (`<site-to-scrape>`)
 | Site   | Parameter name | Status  | Link                                                |
