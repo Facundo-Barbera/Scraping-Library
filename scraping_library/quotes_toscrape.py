@@ -28,9 +28,9 @@ class QuotesToScrapeScrapper(Scrapper):
 
     def scrape(self):
         """
-        Scrapes quotes from http://quotes.toscrape.com and saves them to a database file.
+        Scrapes quotes from http://quotes.toscrape.com.
         """
-        # Scrape quotes from all pages
+        # Scrape quotes
         while self._current_url and (not self._max_quotes or len(self._quotes) < self._max_quotes):
             print(f'Now scraping {self._current_url}...')
             parsed_html = self._parse_html(self._current_url)
@@ -71,6 +71,11 @@ class QuotesToScrapeScrapper(Scrapper):
         with sqlite3.connect(self._database_file) as connection:
             connection.execute('DELETE FROM quotes WHERE TRUE')
 
+    def _save_quote_to_database(self, quote: dict):
+        with sqlite3.connect(self._database_file) as connection:
+            connection.execute('INSERT INTO quotes (text, author, tags) VALUES (?, ?, ?)',
+                               (quote['text'], quote['author'], quote['tags']))
+
     def _scrape_quotes(self, parsed_html):
         # Get all quotes
         quotes = []
@@ -86,16 +91,6 @@ class QuotesToScrapeScrapper(Scrapper):
 
         # Return quotes
         return quotes
-
-    def _save_quote_to_database(self, quote: dict):
-        with sqlite3.connect(self._database_file) as connection:
-            connection.execute('INSERT INTO quotes (text, author, tags) VALUES (?, ?, ?)',
-                               (quote['text'], quote['author'], quote['tags']))
-
-    @staticmethod
-    def _parse_html(url: str):
-        page_html = requests.get(url)
-        return BeautifulSoup(page_html.content, 'html.parser')
 
     @staticmethod
     def _get_next_page(parsed_html):

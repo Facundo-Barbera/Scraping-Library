@@ -1,5 +1,8 @@
 import os
 
+import requests
+from bs4 import BeautifulSoup
+
 DEFAULT_DATABASE_FILE = 'data/output.db'
 
 
@@ -15,6 +18,14 @@ class Scrapper:
         Scrape the website and save the data to the database.
         """
         raise NotImplementedError
+
+    @staticmethod
+    def _parse_html(self, url: str):
+        """
+        Parse HTML from a URL.
+        """
+        response = requests.get(url)
+        return BeautifulSoup(response.text, 'html.parser')
 
     @staticmethod
     def _make_dirs_to_path(path: str):
