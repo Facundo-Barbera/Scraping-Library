@@ -21,6 +21,14 @@ pip install git+https://github.com/Facundo-Barbera/Scrapper.git
 
 Check the [Wiki](https://github.com/Facundo-Barbera/Scrapper/wiki) to learn how to use the package.
 
+## Current features
+
+| Feature | Status  | Website                                         |
+|---------|---------|-------------------------------------------------|
+| quotes  | ✅       | [Quotes to Scrape](http://quotes.toscrape.com/) |
+| books   | WIP     | [Books to Scrape](http://books.toscrape.com/)   |
+| WHO     | Planned | [WHO](https://www.who.int/)                     |
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
