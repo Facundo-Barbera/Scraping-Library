@@ -42,6 +42,16 @@ class TestQuotesToScrape(unittest.TestCase):
             self.assertIn('author', quote)
             self.assertIn('tags', quote)
 
+    def test_quotes_database(self):
+        # Create instance of QuotesToScrapeScrapper
+        scrapper = QuotesToScrapeScrapper(max_quotes=20)
+
+        # Scrape quotes
+        scrapper.scrape()
+
+        # Save quotes to database
+        scrapper.save_to_database()
+
 
 if __name__ == '__main__':
     unittest.main()

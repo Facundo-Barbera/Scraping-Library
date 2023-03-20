@@ -48,6 +48,8 @@ class QuotesToScrapeScrapper(Scrapper):
         """
         Saves the scraped quotes to the database.
         """
+        self._make_dirs_to_path(self._database_file)
+
         if not self._quotes:
             print('No quotes to save to database.')
             return
