@@ -53,6 +53,12 @@ scrapper.scrape()
 scrapper.save_to_database()
 ```
 
+### More functionality coming soon
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
 ## Contributing
 
 Pull requests are welcome,
