@@ -1,43 +1,59 @@
 # Scrapper
+
 A python based project to scrape web-sites.
 
 ## Installation
-### Clone the repository
-```bash
-git clone https://github.com/Facundo-Barbera/Scrapper.git
-```
 
-### Install the requirements
+This project requires
+[Python 3.10](https://www.python.org/downloads/release/python-3100/)
+or higher.
+
+### Clone the repository
+
 ```bash
-pip install -r requirements.txt
+pip install https://github.com/Facundo-Barbera/Scrapper.git
 ```
 
 ## Usage
-### Run the script
-```bash
-python3 scrapper.py <site-to-scrape> (output-file)
+
+### Quotes to Scrape
+
+```python
+from scraping_library import QuotesToScrapeScrapper
+
+# Scrap quotes.toscrape.com
+scrapper = QuotesToScrapeScrapper()
+scrapper.scrape()
+
+# Get quotes
+quotes = scrapper.get_quotes()
 ```
 
-- `(site-to-scrape)` is the site to scrape, see the list below. 
-  - This argument is not required
-  - If it is not specified, the script will ask for it, and default database will be used.
+Each quote is a dictionary which is built like this:
 
-- `(output-file)` this is an optional argument, that specifies the output file.
-  - This needs to be a `.db` file since the data is saved using `sqlite3`
-  - The default value is `data/output.db`
+```python
+quote = {
+    "text": "The text of the quote",
+    "author": "The author of the quote",
+    "tags": ["a", "list", "of", "tags"]
+}
+```
 
+The `QuotesToScrapeScrapper` can also be initialized with a quote limit and a database file.
 
-Note: the database file will be created each time the script is run. 
-If you want to keep the data, move the file to a different location before running the script again.
+```python
+from scraping_library import QuotesToScrapeScrapper
 
-### Sites to scrape (`<site-to-scrape>`)
-| Site   | Parameter name | Status  | Link                                                |
-|--------|----------------|---------|-----------------------------------------------------|
-| Quotes | quotes         | Ready   | http://quotes.toscrape.com                          |
-| Books  | books          | W.I.P   | http://books.toscrape.com                           |
-| Jobs   | jobs           | Planned | https://www.timesjobs.com/candidate/job-search.html |
-| WHO    | who            | Planned | https://www.who.int/                                |
+# Scrap quotes.toscrape.com
+scrapper = QuotesToScrapeScrapper(max_quotes=10, database_file="data/my_database.db")
+scrapper.scrape()
+
+# Save the scrapped data to a data file
+# Default database is data/output.db
+scrapper.save_to_database()
+```
 
 ## Contributing
-Pull requests are welcome, 
+
+Pull requests are welcome,
 although I prefer to keep this project as a personal project and would rather receive issues and suggestions.
