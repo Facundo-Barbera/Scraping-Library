@@ -33,3 +33,4 @@ although I prefer to keep this project as a personal project and would rather re
 ## Socials and extras
 
 Join my [Discord server](https://discord.gg/8Z7Y4Z9).
+(Note: This is a mainly spanish server created for funs.)
