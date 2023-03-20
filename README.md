@@ -1,4 +1,4 @@
-# Scrapper
+# Scraping Library
 
 A python based project to scrape web-sites.
 This is a personal project to explore web scraping and better understand how it works.
