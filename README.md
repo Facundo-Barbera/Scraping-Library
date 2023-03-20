@@ -1,6 +1,9 @@
 # Scrapper
 
 A python based project to scrape web-sites.
+This is a personal project to explore web scraping and better understand how it works.
+I also made this project a library, mostly to practice packaging and publishing a python library.
+If you have any suggestions or issues, please open an issue.
 
 ## Installation
 
@@ -11,7 +14,7 @@ or higher.
 ### Clone the repository
 
 ```bash
-pip install https://github.com/Facundo-Barbera/Scrapper.git
+pip install git+https://github.com/Facundo-Barbera/Scrapper.git
 ```
 
 ## Usage
@@ -63,3 +66,7 @@ scrapper.save_to_database()
 
 Pull requests are welcome,
 although I prefer to keep this project as a personal project and would rather receive issues and suggestions.
+
+## Socials and extras
+
+Join my [Discord server](https://discord.gg/8Z7Y4Z9).
