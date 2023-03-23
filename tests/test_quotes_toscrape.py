@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from scraping_library import QuotesToScrapeScrapper
@@ -6,61 +5,40 @@ from scraping_library import QuotesToScrapeScrapper
 
 class TestQuotesToScrape(unittest.TestCase):
 
-    def test_quotes_max_0(self):
-        # Get quotes
+    def test_scrape_no_limit(self):
+        # Scrape all quotes.
         scrapper = QuotesToScrapeScrapper()
-        scrapper.scrape()
-        quotes = scrapper.get_quotes()
+        scrapper.scrape(max_quotes=0)
 
-        # Check if all quotes have the correct format and key
-        for quote in quotes:
-            self.assertEqual(len(quote), 3)
-            self.assertIn('text', quote)
-            self.assertIn('author', quote)
-            self.assertIn('tags', quote)
+        # Check that there are more than 0 quotes.
+        self.assertGreater(len(scrapper.quotes), 0)
 
-    def test_quotes_max_20(self):
-        # Get quotes
-        scrapper = QuotesToScrapeScrapper(max_quotes=20)
-        scrapper.scrape()
-        quotes = scrapper.get_quotes()
+    def test_scrape_no_limit_verbose(self):
+        # Scrape all quotes.
+        scrapper = QuotesToScrapeScrapper(verbose=True)
+        scrapper.scrape(max_quotes=0)
 
-        # Check if the number of quotes is correct
-        self.assertEqual(len(quotes), 20)
+        # Check that there are more than 0 quotes.
+        self.assertGreater(len(scrapper.quotes), 0)
 
-        # Check if all quotes have the correct format and key
-        for quote in quotes:
-            self.assertEqual(len(quote), 3)
-            self.assertIn('text', quote)
-            self.assertIn('author', quote)
-            self.assertIn('tags', quote)
+    def test_scrape_limit_10(self):
+        # Scrape 10 quotes.
+        scrapper = QuotesToScrapeScrapper()
+        scrapper.scrape(max_quotes=10)
 
-    def test_quotes_max_1000(self):
-        # Get quotes
-        scrapper = QuotesToScrapeScrapper(max_quotes=1000)
-        scrapper.scrape()
-        quotes = scrapper.get_quotes()
+        # Check that there are 10 quotes.
+        self.assertEqual(len(scrapper.quotes), 10)
 
-        # Check if all quotes have the correct format and key
-        for quote in quotes:
-            self.assertEqual(len(quote), 3)
-            self.assertIn('text', quote)
-            self.assertIn('author', quote)
-            self.assertIn('tags', quote)
+    def test_scrape_quality(self):
+        # Scrape 1 quote.
+        scrapper = QuotesToScrapeScrapper()
+        scrapper.scrape(max_quotes=1)
 
-    def test_quotes_database(self):
-        # Scrape quotes and save to database
-        scrapper = QuotesToScrapeScrapper(max_quotes=20, database_file='data/output.db')
-        scrapper.scrape()
-        scrapper.save_to_database()
+        # Check that there is 1 quote.
+        self.assertEqual(len(scrapper.quotes), 1)
 
-        # Check if database file exists
-        self.assertTrue(os.path.isfile('data/output.db'))
-
-        # Clean up
-        os.remove('data/output.db')
-        if not os.listdir('data'):
-            os.rmdir('data')
+        # Check the dictionary keys.
+        self.assertEqual(set(scrapper.quotes[0].keys()), {'text', 'author', 'tags'})
 
 
 if __name__ == '__main__':
