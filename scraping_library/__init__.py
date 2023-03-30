@@ -1,2 +1,2 @@
 from .quotes_toscrape import QuotesToScrapeScrapper
-from .scrapper import DEFAULT_DATABASE_FILE
+from .scrapper_abc import DEFAULT_DATABASE_FILE

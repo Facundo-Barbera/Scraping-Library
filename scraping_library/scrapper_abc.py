@@ -20,7 +20,7 @@ class ScrapperABC(ABC):
         Args:
             verbose: If True, the progress of the scraping will be printed to the console.
         """
-        pass
+        self._verbose = verbose
 
     @abstractmethod
     def scrape(self):
@@ -31,9 +31,9 @@ class ScrapperABC(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def save_to_database(self, path: str = DEFAULT_DATABASE_FILE):
+    def _scrape_page(self, parsed_html):
         """
-        Save the scraped data to a database.
+        Scrape a page.
         This is a blueprint for all scraping_library scrapers.
         """
         raise NotImplementedError
