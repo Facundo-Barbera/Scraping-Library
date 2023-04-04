@@ -20,7 +20,7 @@ class QuotesToScrape(ScrapperABC):
         Initializes the QuotesToScrapeScrapper.
         """
         # Setup logger
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        logging.basicConfig(level=logging.INFO, format='[QuotesToScrape] %(levelname)s - %(message)s')
         self._logger = logging.getLogger(__name__)
 
     def scrape(self):
@@ -64,9 +64,9 @@ class QuotesToScrape(ScrapperABC):
         start_time = time.time()
         self._logger.info('Scraping..')
 
-        async def _scrape_all_pages_and_quotes(urls):
+        async def _scrape_all_pages_and_quotes(url_list):
             # Get all parsed HTMLs with _get_all_pages_preloaded
-            parsed_htmls = await self._get_all_pages_preloaded(urls)
+            parsed_htmls = await self._get_all_pages_preloaded(url_list)
 
             # Create an async task for each page
             tasks = [self._scrape_page(parsed_html) for parsed_html in parsed_htmls]
@@ -123,18 +123,6 @@ class QuotesToScrape(ScrapperABC):
 
         # Return parsed HTMLs
         return parsed_htmls
-
-    def _parse_html_from_url(self, url):
-        """
-        Parses HTML from a URL.
-        """
-        # Get HTML from URL and parse it
-        self._logger.info(f'Parsing HTML from {url}..')
-        html = requests.get(url).text
-        parsed_html = BeautifulSoup(html, 'html.parser')
-
-        # Return parsed HTML
-        return parsed_html
 
     async def _get_all_pages_preloaded(self, urls: list):
         """
@@ -196,3 +184,15 @@ class QuotesToScrape(ScrapperABC):
 
         # Return quotes
         return quotes
+
+    def _parse_html_from_url(self, url):
+        """
+        Parses HTML from a URL.
+        """
+        # Get HTML from URL and parse it
+        self._logger.info(f'Parsing HTML from {url}..')
+        html = requests.get(url).text
+        parsed_html = BeautifulSoup(html, 'html.parser')
+
+        # Return parsed HTML
+        return parsed_html
