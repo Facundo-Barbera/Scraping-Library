@@ -1,17 +1,14 @@
 # Scraping Library
 
-A python based project to scrape web-sites.
-This is a personal project to explore web scraping and better understand how it works.
-I also made this project a library, mostly to practice packaging and publishing a python library.
-If you have any suggestions or issues, please open an issue.
+Welcome to this Python-based project that is designed for website scraping. As a personal endeavor, this project was created to explore the exciting field of web scraping and gain a better understanding of its inner workings. Furthermore, this project has been packaged as a library to provide users with the ability to practice publishing and packaging Python libraries. We value your feedback and input. If you have any suggestions or issues to report, please do not hesitate to open an issue. Thank you for your support.
 
 ## Installation
 
-This project requires
+This project was built with
+[Python 3.11](https://www.python.org/downloads/release/python-3110/)
+but requires
 [Python 3.10](https://www.python.org/downloads/release/python-3100/)
-or higher.
-
-### Clone the repository
+or higher. 
 
 ```bash
 pip install git+https://github.com/Facundo-Barbera/Scrapper.git
@@ -25,7 +22,7 @@ Check the [Wiki](https://github.com/Facundo-Barbera/Scrapper/wiki) to learn how 
 
 | Feature | Status  | Website                                         |
 |---------|---------|-------------------------------------------------|
-| quotes  | ✅       | [Quotes to Scrape](http://quotes.toscrape.com/) |
+| quotes  | ✅      | [Quotes to Scrape](http://quotes.toscrape.com/) |
 | books   | WIP     | [Books to Scrape](http://books.toscrape.com/)   |
 | WHO     | Planned | [WHO](https://www.who.int/)                     |
 
@@ -35,8 +32,7 @@ Check the [Wiki](https://github.com/Facundo-Barbera/Scrapper/wiki) to learn how 
 
 ## Contributing
 
-Pull requests are welcome,
-although I prefer to keep this project as a personal project and would rather receive issues and suggestions.
+Contributions in the form of pull requests are welcome, although this project is primarily a personal endeavor. As such, I would prefer to receive feedback, issues or suggestions. Your input is valuable to me and will help improve this project. Thank you for your understanding.
 
 ## Socials and extras
 
