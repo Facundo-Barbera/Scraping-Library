@@ -7,11 +7,11 @@ If you have any suggestions or issues, please open an issue.
 
 ## Installation
 
-This project requires
+This project was built with
+[Python 3.11](https://www.python.org/downloads/release/python-3110/)
+but requires
 [Python 3.10](https://www.python.org/downloads/release/python-3100/)
-or higher.
-
-### Clone the repository
+or higher. 
 
 ```bash
 pip install git+https://github.com/Facundo-Barbera/Scrapper.git
@@ -25,7 +25,7 @@ Check the [Wiki](https://github.com/Facundo-Barbera/Scrapper/wiki) to learn how 
 
 | Feature | Status  | Website                                         |
 |---------|---------|-------------------------------------------------|
-| quotes  | ✅       | [Quotes to Scrape](http://quotes.toscrape.com/) |
+| quotes  | ✅      | [Quotes to Scrape](http://quotes.toscrape.com/) |
 | books   | WIP     | [Books to Scrape](http://books.toscrape.com/)   |
 | WHO     | Planned | [WHO](https://www.who.int/)                     |
 
