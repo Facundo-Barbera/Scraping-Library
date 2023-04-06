@@ -24,11 +24,8 @@ class ScrapperABC(ABC):
         """
         Parses HTML from a URL.
         """
-        # Get HTML from URL and parse it
         html = requests.get(url).text
         parsed_html = BeautifulSoup(html, 'html.parser')
-
-        # Return parsed HTML
         return parsed_html
 
     @staticmethod
