@@ -26,7 +26,6 @@ class BooksToScrape(ScrapperABC):
         """
         Initializes the BooksToScrapeScrapper.
         """
-        # Setup logger
         logging.basicConfig(level=logging.INFO, format='[BooksToScrape] %(levelname)s - %(message)s')
         self._logger = logging.getLogger(__name__)
 
@@ -35,7 +34,6 @@ class BooksToScrape(ScrapperABC):
         Scrapes books from http://books.toscrape.com asynchronously.
 
         Args:
-            async_: Whether to scrape asynchronously or not.
             semaphore_: The semaphore to use when scraping asynchronously.
 
         Returns:
@@ -44,10 +42,8 @@ class BooksToScrape(ScrapperABC):
         start_time = time.time()
         self._logger.info('Scraping...')
 
-        # Get all catalogue pages
         parsed_catalogue_htmls = self._get_all_catalogue_pages()
 
-        # Get all book pages from all catalogue pages
         async def get_all_book_htmls(parsed_htmls):
             book_html_start_time = time.time()
             self._logger.info('Getting all book pages...')
@@ -64,7 +60,6 @@ class BooksToScrape(ScrapperABC):
 
         parsed_book_htmls = asyncio.run(get_all_book_htmls(parsed_catalogue_htmls))
 
-        # Get all book data from all book pages
         async def get_all_book_data(parsed_htmls):
             book_data_start_time = time.time()
             self._logger.info('Getting all book data...')
@@ -81,7 +76,6 @@ class BooksToScrape(ScrapperABC):
 
         parsed_book_data = asyncio.run(get_all_book_data(parsed_book_htmls))
 
-        # Return book data
         self._logger.info(f'Scraped {len(parsed_book_htmls)} books in {time.time() - start_time} seconds.')
         return parsed_book_data
 
@@ -92,7 +86,6 @@ class BooksToScrape(ScrapperABC):
         Returns:
             A list of parsed HTMLs.
         """
-        # Get HTML from base URL and parse it
         parsed_htmls = [self._parse_html_from_url(self.BASE_URL)]
 
         while True:
@@ -119,11 +112,8 @@ class BooksToScrape(ScrapperABC):
             A list of books URLs.
         """
         books_urls = []
-
-        # Get all books
         books = parsed_html.find_all('article', {'class': 'product_pod'})
 
-        # Get all books URLs
         for book in books:
             url = book.find('a')['href']
             books_urls.append(self.BASE_URL + f'{"/" if url.startswith("catalogue") else "/catalogue/"}' + url)
@@ -174,10 +164,7 @@ class BooksToScrape(ScrapperABC):
         """
         Parses HTML from a URL.
         """
-        # Get HTML from URL and parse it
         self._logger.info(f'Parsing HTML from {url}...')
         html = requests.get(url).text
         parsed_html = BeautifulSoup(html, 'html.parser')
-
-        # Return parsed HTML
         return parsed_html
