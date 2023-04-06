@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+import aiohttp
 import requests
 from bs4 import BeautifulSoup
 
@@ -16,6 +17,7 @@ class ScrapperABC(ABC):
         """
         Initializes the ScrapperABC.
         """
+        pass
 
     @abstractmethod
     def _parse_html_from_url(self, url):
@@ -28,3 +30,26 @@ class ScrapperABC(ABC):
 
         # Return parsed HTML
         return parsed_html
+
+    @staticmethod
+    async def _get_page_async(url):
+        """
+        Gets a set of htmls from a URL asynchronously.
+
+        Args:
+            url: The URL to scrape.
+
+        Returns:
+            A parsed HTML page.
+        """
+
+        async def fetch(url, session):
+            async with session.get(url) as response:
+                return await response.text()
+
+        async def _parse_html_async(url):
+            async with aiohttp.ClientSession() as session:
+                html_text = await fetch(url, session)
+                return BeautifulSoup(html_text, 'html.parser')
+
+        return await _parse_html_async(url)
