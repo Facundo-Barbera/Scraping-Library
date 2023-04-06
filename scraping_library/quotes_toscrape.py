@@ -19,7 +19,6 @@ class QuotesToScrape(ScrapperABC):
         """
         Initializes the QuotesToScrapeScrapper.
         """
-        # Setup logger
         logging.basicConfig(level=logging.INFO, format='[QuotesToScrape] %(levelname)s - %(message)s')
         self._logger = logging.getLogger(__name__)
 
@@ -30,27 +29,21 @@ class QuotesToScrape(ScrapperABC):
         Returns:
             A list of quotes.
         """
-        start_time = time.time()
+        scrape_start_time = time.time()
         self._logger.info('Scraping..')
 
-        # Create an async task for each page
         tasks = [self._scrape_page(parsed_html) for parsed_html in self._get_all_pages()]
-
-        # Run all tasks
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
         try:
             quotes = loop.run_until_complete(asyncio.gather(*tasks))
         finally:
-            loop.run_until_complete(loop.shutdown_asyncgens())  # For Python 3.6+ only
+            loop.run_until_complete(loop.shutdown_asyncgens())
             loop.close()
 
-        # Clean quotes
         quotes = [quote for page_quotes in quotes for quote in page_quotes]
-        self._logger.info(f'Scraped {len(quotes)} quotes in {time.time() - start_time} seconds.')
-
-        # Return quotes
+        self._logger.info(f'Scraped {len(quotes)} quotes in {time.time() - scrape_start_time} seconds.')
         return quotes
 
     def scrape_preloaded(self):
@@ -65,30 +58,16 @@ class QuotesToScrape(ScrapperABC):
         self._logger.info('Scraping..')
 
         async def _scrape_all_pages_and_quotes(url_list):
-            # Get all parsed HTMLs with _get_all_pages_preloaded
             parsed_htmls = await self._get_all_pages_preloaded(url_list)
-
-            # Create an async task for each page
             tasks = [self._scrape_page(parsed_html) for parsed_html in parsed_htmls]
+            return await asyncio.gather(*tasks)
 
-            # Run all tasks
-            quotes = await asyncio.gather(*tasks)
-
-            return quotes
-
-        # Create a list of all URLs
         urls = [self.BASE_URL]
-        for i in range(2, 11):
-            urls.append(self.BASE_URL + f'/page/{i}/')
+        for page_number in range(2, 11):
+            urls.append(self.BASE_URL + f'/page/{page_number}/')
 
-        # Scrape all pages and get quotes
-        quotes = asyncio.run(_scrape_all_pages_and_quotes(urls))
-
-        # Clean quotes
-        quotes = [quote for page_quotes in quotes for quote in page_quotes]
+        quotes = [quote for page_quotes in asyncio.run(_scrape_all_pages_and_quotes(urls)) for quote in page_quotes]
         self._logger.info(f'Scraped {len(quotes)} quotes in {time.time() - start_time} seconds.')
-
-        # Return quotes
         return quotes
 
     def _get_all_pages(self):
@@ -145,27 +124,20 @@ class QuotesToScrape(ScrapperABC):
         """
         self._logger.info('Scraping page..')
 
-        # Get all quotes
         quotes = []
         for quote in parsed_html.find_all('div', class_='quote'):
-            # Add quote to list
             quotes.append({'text': quote.find('span', class_='text').text,
                            'author': quote.find('small', class_='author').text,
                            'tags': str([tag.text for tag in quote.find_all('a', class_='tag')])})
 
         self._logger.info(f'Scraped {len(quotes)} quotes.')
-
-        # Return quotes
         return quotes
 
     def _parse_html_from_url(self, url):
         """
         Parses HTML from a URL.
         """
-        # Get HTML from URL and parse it
         self._logger.info(f'Parsing HTML from {url}..')
         html = requests.get(url).text
         parsed_html = BeautifulSoup(html, 'html.parser')
-
-        # Return parsed HTML
         return parsed_html
