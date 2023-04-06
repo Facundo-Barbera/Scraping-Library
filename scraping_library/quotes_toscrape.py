@@ -99,29 +99,18 @@ class QuotesToScrape(ScrapperABC):
             A list of parsed HTML pages.
         """
         self._logger.info('Getting all pages..')
-
-        # Parse the base URL
-        parsed_htmls = []
-        parsed_html = self._parse_html_from_url(self.BASE_URL)
+        parsed_htmls = [self._parse_html_from_url(self.BASE_URL)]
 
         while True:
-            # Add parsed HTML to list
-            parsed_htmls.append(parsed_html)
-
-            # Get first next button
-            next_button = parsed_html.find('li', class_='next') or None
+            next_button = parsed_htmls[-1].find('li', class_='next') or None
             next_page = next_button.find('a')['href'] if next_button else None
 
-            # If there is no next page, break
             if not next_page:
                 break
-
-            # Parse the next page
-            parsed_html = self._parse_html_from_url(self.BASE_URL + next_page)
+            else:
+                parsed_htmls.append(self._parse_html_from_url(self.BASE_URL + next_page))
 
         self._logger.info(f'Got {len(parsed_htmls)} pages.')
-
-        # Return parsed HTMLs
         return parsed_htmls
 
     async def _get_all_pages_preloaded(self, urls: list):
@@ -137,27 +126,11 @@ class QuotesToScrape(ScrapperABC):
         """
         self._logger.info('Getting all pages..')
 
-        async def fetch(url, session):
-            async with session.get(url) as response:
-                return await response.text()
-
-        async def _parse_html_async(url):
-            async with aiohttp.ClientSession() as session:
-                html_text = await fetch(url, session)
-                return BeautifulSoup(html_text, 'html.parser')
-
-        async def _get_page_async(url):
-            return await _parse_html_async(url)
-
-        async def _gather_all_pages():
-            async with aiohttp.ClientSession() as _:
-                tasks = [_get_page_async(url) for url in urls]
-                return await asyncio.gather(*tasks)
-
-        parsed_htmls = await _gather_all_pages()
+        async with aiohttp.ClientSession() as _:
+            tasks = [self._get_page_async(url) for url in urls]
+            parsed_htmls = await asyncio.gather(*tasks)
 
         self._logger.info(f'Got {len(parsed_htmls)} pages.')
-
         return parsed_htmls
 
     async def _scrape_page(self, parsed_html):
